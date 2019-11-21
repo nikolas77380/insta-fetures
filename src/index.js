@@ -5,11 +5,17 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from './store';
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import {ThemeProvider} from '@material-ui/styles';
+import {loginByAccessToken} from './actions/auth';
+
+//Dispatch login action
+store.dispatch(loginByAccessToken());
+
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#ADD8E6',
+            main: '#e91e63',
         },
         secondary: {
             main: 'rgb(55, 46, 142)',
@@ -27,11 +33,12 @@ const theme = createMuiTheme({
 window.theme = theme;
 ReactDOM.render(
     <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-            <ThemeProvider theme={theme}>
-                <App/>
-            </ThemeProvider>
-    </MuiThemeProvider>
+        <MuiThemeProvider theme={theme}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline/>
+                    <App/>
+                </ThemeProvider>
+        </MuiThemeProvider>
     </Provider>,
     document.getElementById('root'));
 
