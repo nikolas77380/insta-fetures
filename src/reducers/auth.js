@@ -3,29 +3,54 @@ import {auth} from './../actions/types';
 
 const initialState = {
     user: null,
-    token: null,
-    loggingIn: false,
-    loginError: null,
+    token: localStorage.getItem('token'),
+    loading: false,
+    isAuthenticated: null,
 };
 
 export default function Auth(state = initialState, action) {
-    switch (action.type) {
+    const {type, payload} = action;
+
+    switch (type) {
         case auth.loading:
             return {
                 ...state,
-                loggingIn: true
+                loading: true
+            }
+        case auth.userLoaded:
+            return {
+                ...state,
+                isAuthenticated: true,
+                user: payload,
             }
         case auth.loginSuccess:
+            localStorage.setItem('token', payload)
             return {
                 ...state,
-                token: action.payload,
-                loggingIn: false
+                token: payload,
+                loading: false,
+                isAuthenticated: true
             }
         case auth.loginFailed:
+        case auth.registerFailed:
+            localStorage.removeItem('token');
             return {
                 ...state,
-                loggingIn: false,
-                loginError: action.payload
+                token: null,
+                user: null,
+                loading: false,
+                isAuthenticated: false,
+
+            }
+        case auth.authError:
+            localStorage.removeItem('token');
+            return {
+                ...state,
+                token: null,
+                user: null,
+                loading: false,
+                isAuthenticated: false,
+
             }
         default:
             return state

@@ -7,10 +7,6 @@ import store from './store';
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {ThemeProvider} from '@material-ui/styles';
-import {loginByAccessToken} from './actions/auth';
-
-//Dispatch login action
-store.dispatch(loginByAccessToken());
 
 const theme = createMuiTheme({
     palette: {

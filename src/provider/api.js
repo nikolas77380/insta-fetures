@@ -5,12 +5,30 @@ const Config = {
 
 
 class Provider {
+    constructor() {
+        this.config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    }
+    async authenticate() {
+        try{
+            const response = await axios.get(`${Config.ProviderUrl}/api/auth`,this.config);
+
+            return response.data;
+        } catch(err) {
+            return {
+                error: err
+            }
+        }
+    }
+
     async login({email, password}) {
+        const body = JSON.stringify({email, password});
+
         try {
-            const response = await axios.post(`${Config.ProviderUrl}/api/auth`, {
-                email,
-                password
-            },{
+            const response = await axios.post(`${Config.ProviderUrl}/api/auth`, body,{
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -28,26 +46,10 @@ class Provider {
         }
     }
 
-    async loginByAccessToken(accessToken) {
-        try {
-            const response = await axios.get(`${Config.ProviderUrl}/api/auth`,{
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-auth-token': accessToken
-                }
-            });
+    async uploadFile(file){
 
-            return {
-                token: response.data.token
-            };
-        } catch (error) {
-            console.error(error);
-            return {
-                error: error
-            }
-
-        }
     }
+
 }
 
 const provider = new Provider();

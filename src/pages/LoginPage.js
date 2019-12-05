@@ -1,11 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {connect} from 'react-redux';
-
+import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import LoginForm from '../components/auth/LoginForm';
 import Background from './../background.jpg';
-
+import SchedulerPage from "./Scheduler";
 import {login} from './../actions/auth';
 
 const styles = {
@@ -21,7 +21,12 @@ class LoginPage extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes, isAuthenticated} = this.props;
+
+        if(isAuthenticated) {
+            return <Redirect to={'/scheduler'} />
+        }
+
         return (
             <div className={classes.root} >
                 <img alt="" src={Background} style={{position:"fixed", top:0, left:0, zIndex:-100}} />
@@ -42,10 +47,9 @@ class LoginPage extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return null;
-    // return {
-    //     token: state.auth.token
-    // }
+    return {
+        isAuthenticated: state.auth.isAuthenticated
+    }
 };
 
-export default connect(mapStateToProps(), {login})(withStyles(styles)(LoginPage));
+export default connect(mapStateToProps, {login})(withStyles(styles)(LoginPage));

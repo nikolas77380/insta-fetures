@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 
 import AvatarImg from './../placeholder.jpeg';
 
-import NewPost from "../components/NewPost";
+import NewPost from "../components/post";
 
 const localizer = Calendar.momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);

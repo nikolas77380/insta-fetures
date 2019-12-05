@@ -11,8 +11,18 @@ const useForm = (initialValues, callback) => {
     };
 
     const handleChange = (event) => {
-        event.persist();
-        setValues(values => ({ ...values, [event.target.name]: event.target.value }));
+        if (!event.target) {
+            let newSelectedItem = [...values['tagUsers']];
+            if (newSelectedItem.indexOf(event) === -1) {
+                newSelectedItem = [...newSelectedItem, event];
+            } else {
+                newSelectedItem.splice(newSelectedItem.indexOf(event), 1);
+            }
+            setValues(values => ({ ...values, ['tagUsers']: newSelectedItem }))
+        } else {
+            event.persist();
+            setValues(values => ({ ...values, [event.target.name]: event.target.value }));
+        }
     };
 
     return {
