@@ -1,6 +1,6 @@
 
 export const auth = {
-    loading: 'LOADING',
+    loading: 'AUTH_LOADING',
     loginSuccess: 'LOGIN_SUCCESS',
     loginFailed: 'LOGIN_FAILED',
     registerSuccess: 'REGISTER_SUCCESS',
@@ -11,9 +11,15 @@ export const auth = {
 };
 
 export const post = {
-    loading: 'LOADING',
+    loading: 'POST_LOADING',
     setFilesSuccess: 'SET_FILE_SUCCESS',
     setFilesFailed: 'SET_FILE_FAILED',
     setCaption: 'SET_CAPTION',
     captionSetFailed: 'CAPTION_SET_FAILED'
+}
+
+export const location = {
+    loading: 'LOCATION_LOADING',
+    setLocationsSuccess: 'SET_LOCATIONS_SUCCESS',
+    setLocationsFailed: 'SET_LOCATIONS_FAILED',
 }

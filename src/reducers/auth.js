@@ -15,7 +15,7 @@ export default function Auth(state = initialState, action) {
         case auth.loading:
             return {
                 ...state,
-                loading: true
+                loading: payload
             }
         case auth.userLoaded:
             return {
@@ -28,7 +28,6 @@ export default function Auth(state = initialState, action) {
             return {
                 ...state,
                 token: payload,
-                loading: false,
                 isAuthenticated: true
             }
         case auth.loginFailed:
@@ -38,7 +37,6 @@ export default function Auth(state = initialState, action) {
                 ...state,
                 token: null,
                 user: null,
-                loading: false,
                 isAuthenticated: false,
 
             }
@@ -48,7 +46,6 @@ export default function Auth(state = initialState, action) {
                 ...state,
                 token: null,
                 user: null,
-                loading: false,
                 isAuthenticated: false,
 
             }

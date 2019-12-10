@@ -46,10 +46,21 @@ class Provider {
         }
     }
 
-    async uploadFile(file){
+    async uploadImage(blob){
 
     }
 
+    async getLocations(q) {
+        try {
+            const response = await axios.get(`${Config.ProviderUrl}/api/posts/location?q=${q}`);
+            return response;
+        } catch (error) {
+            console.error(error);
+            return {
+                error: error
+            }
+        }
+    }
 }
 
 const provider = new Provider();

@@ -21,7 +21,7 @@ import UploadStep from "./steps/UploadStep";
 import FilterStep from "./steps/FiltersStep";
 
 import useForm from "../useForm";
-import FinalSettings from "./tabs/FinalSettings";
+import FinalStep from "./steps/FinalStep";
 
 
 const ColorlibConnector = withStyles({
@@ -123,7 +123,7 @@ function getStepContent(step) {
         case 1:
             return <FilterStep/>;
         case 2:
-            return <FinalSettings/>;
+            return <FinalStep/>;
         default:
             return 'Unknown step';
     }

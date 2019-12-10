@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {useDropzone} from 'react-dropzone';
 import {setFiles} from './../../../actions/post';
-
+import ImageCropper from "../../common/ImageCropper";
 const thumbsContainer = {
     display: 'flex',
     flexDirection: 'row',
@@ -11,13 +10,12 @@ const thumbsContainer = {
 };
 
 const thumb = {
-    display: 'inline-flex',
+    display: 'flex',
+    justifyContent:'center',
+    border: 0,
     borderRadius: 1,
-    border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    width: 200,
-    height: 300,
     padding: 2,
     boxSizing: 'border-box'
 };
@@ -30,7 +28,7 @@ const thumbInner = {
 
 const img = {
     display: 'block',
-    width: 200,
+    width: '100%',
     height: '100%'
 };
 
@@ -41,41 +39,34 @@ function UploadStep(props) {
     const dispatch = useDispatch();
     const [files, setLocalFiles] = useState(data);
 
-    const {getRootProps, getInputProps} = useDropzone({
-        accept: 'image/*',
-        onDrop: acceptedFiles => {
-            dispatch(setFiles(acceptedFiles));
-            setLocalFiles(acceptedFiles);
-
-        }
-    });
+    const applyImage = (file) => {
+        dispatch(setFiles([file]));
+        setLocalFiles([file]);
+    }
 
     const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
+        <div style={thumb} key={file}>
             <div style={thumbInner}>
                 <img
-                    src={URL.createObjectURL(file)}
+                    src={file}
                     style={img}
                 />
             </div>
         </div>
     ));
-
+    const resetCrop = () => {
+        setLocalFiles([]);
+    }
     useEffect(() => () => {
         // Make sure to revoke the data uris to avoid memory leaks
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [files]);
 
     return (
-        <section className="container">
-            <div {...getRootProps({className: 'dropzone'})} style={{cursor:'pointer'}}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
-            </div>
-            <aside style={thumbsContainer}>
-                {thumbs}
-            </aside>
-        </section>
+        <>
+            <ImageCropper applyImage={(file) => applyImage(file)} resetCrop={resetCrop}/>
+            {thumbs}
+        </>
     );
 }
 

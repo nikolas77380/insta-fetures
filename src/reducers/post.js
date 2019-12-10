@@ -10,38 +10,34 @@ const initialState = {
     users: []
 };
 
-export default function Auth(state = initialState, action) {
+export default function Post(state = initialState, action) {
     const {type, payload} = action;
 
     switch (type) {
         case post.loading:
             return {
                 ...state,
-                loading: true
+                loading: payload
             }
         case post.setFilesSuccess:
             return {
                 ...state,
-                loading: false,
                 files: payload
             }
         case post.setFilesFailed:
             return {
                 ...state,
-                loading: false,
                 files: null
 
             }
         case post.setCaption:
             return {
                 ...state,
-                loading: false,
                 caption: payload
             }
         case post.captionSetFailed:
             return {
                 ...state,
-                loading: false,
                 caption: ''
             }
         default:

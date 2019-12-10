@@ -52,8 +52,6 @@ const thumb = {
     border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    width: 200,
-    height: 300,
     padding: 2,
     boxSizing: 'border-box'
 };
@@ -113,19 +111,24 @@ function FilterStep(props) {
         saturation: 1,
         brightness: 1,
         filter: ''
-    }
+    };
     const classes = useStyles();
     const reduxData = useSelector(state => state.post.files);
+
     const [settings, setSettings] = useState(defaultSettings);
     const [tab, setTab] = React.useState(0);
-
-    let preview = '';
+    const [dimentions, setDimentions] = useState({width:0, height: 0});
+    let image = '';
 
     useEffect(() => {
-        const data = reduxData ? reduxData : [];
-        preview = URL.createObjectURL(data[0]);
-    },[])
-
+        image = document.createElement('img');
+        image.setAttribute('id','filterImage');
+        image.src = reduxData[0];
+        setDimentions({
+            width:image.width,
+            height: image.height
+        });
+    },[]);
     const handleChange = (type, value) => {
         setSettings({
             ...settings, [type]: value
@@ -140,15 +143,14 @@ function FilterStep(props) {
         setSettings(defaultSettings);
     }
 
-
     return (
         <section className="container">
             <div style={thumbsContainer}>
                 <div style={thumb}>
                     <div style={thumbInner}>
-                        <Surface width={200} height={300}>
+                        <Surface width={dimentions.width} height={dimentions.height}>
                             <Saturate {...settings}>
-                                { URL.createObjectURL(reduxData[0])}
+                                { reduxData[0] }
                             </Saturate>
                         </Surface>
                     </div>
@@ -177,8 +179,6 @@ function FilterStep(props) {
                     <TabPanel style={{maxHeight:'130px', overflowY: 'scroll'}} value={tab} index={1}>
                         <EditTab settings={settings} handleChange={(type, value) => handleChange(type, value)}/>
                     </TabPanel>
-
-
                 </div>
             </div>
         </section>

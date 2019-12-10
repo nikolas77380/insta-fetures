@@ -71,7 +71,7 @@ const FiltersTab = ({handleChange}) => {
                             <Button onClick={() => handleChange('filter', filter)}>
                             <Surface width={100} height={100}>
                                 <Saturate {...settings}>
-                                    { URL.createObjectURL(reduxData[0])}
+                                    {reduxData[0]}
                                 </Saturate>
                             </Surface>
                             </Button>
