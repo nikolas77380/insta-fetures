@@ -25,19 +25,11 @@ class Provider {
 
     async login({email, password}) {
         const body = JSON.stringify({email, password});
-
-        try {
             const response = await axios.post(`${Config.ProviderUrl}/api/auth`, body, this.config);
-            return {
-                token: response.data.token
-            };
-        } catch (error) {
-            console.error(error);
-            return {
-                error: error
-            }
-
-        }
+            // return {
+            //     token: response.data.token
+            // };
+            return response;
     }
 
     async uploadImage(blob){

@@ -32,7 +32,7 @@ export const login = ({email, password}) => {
     return async dispatch => {
         dispatch({type: auth.loading, payload: true});
         try {
-            const data = await provider.login({email, password});
+            const {data} = await provider.login({email, password});
             dispatch({ type: loginSuccess, payload: data.token });
             dispatch(loadUser());
             dispatch({type: auth.loading, payload: false});
