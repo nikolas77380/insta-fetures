@@ -7,6 +7,7 @@ const initialState = {
     filter: '',
     caption: '',
     location: '',
+    hashtags: [],
     users: []
 };
 
@@ -18,27 +19,37 @@ export default function Post(state = initialState, action) {
             return {
                 ...state,
                 loading: payload
-            }
+            };
         case post.setFilesSuccess:
             return {
                 ...state,
                 files: payload
-            }
+            };
         case post.setFilesFailed:
             return {
                 ...state,
                 files: null
 
-            }
+            };
         case post.setCaption:
             return {
                 ...state,
                 caption: payload
-            }
+            };
         case post.captionSetFailed:
             return {
                 ...state,
                 caption: ''
+            };
+        case post.setHashtags:
+            return {
+                ...state,
+                hashtags: payload
+            }
+        case post.clearHashtags:
+            return {
+                ...state,
+                hashtags: []
             }
         default:
             return state

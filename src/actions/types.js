@@ -15,7 +15,9 @@ export const post = {
     setFilesSuccess: 'SET_FILE_SUCCESS',
     setFilesFailed: 'SET_FILE_FAILED',
     setCaption: 'SET_CAPTION',
-    captionSetFailed: 'CAPTION_SET_FAILED'
+    captionSetFailed: 'CAPTION_SET_FAILED',
+    setHashtags: 'SET_HASHTAGS',
+    clearHashtags: 'CLEAR_HASHTAGS',
 }
 
 export const location = {

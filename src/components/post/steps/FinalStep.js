@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import {useDispatch, useSelector} from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import DownshiftMultiple from './../../common/SearchInput';
-import {Autocomplete} from '@material-ui/lab';
+import ClearIcon from '@material-ui/icons/HighlightOff';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {getLocation} from "../../../actions/post";
-
-import useForm from "../../useForm";
-import {useDispatch, useSelector} from "react-redux";
 import {Paper} from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import {getLocation, clearLocation} from "../../../actions/post";
+import useDebounce from "../../useDebounce";
+import HashtagModal from "../../common/HashtagModal";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -52,27 +51,45 @@ const useStyles = makeStyles(theme => ({
     divider: {
         height: theme.spacing(2),
     },
+    locationsBlock: {
+        height:'100px',
+        width:'100%',
+        overflowY:'scroll',
+        marginTop:'10px'
+    },
+    progressWrapper: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: '10px',
+        },
+    }
 }));
 
 const FinalStep = () => {
     const classes = useStyles();
 
-
     const dispatch = useDispatch();
     const reduxData = useSelector(state => state.post.files);
     const locationsData = useSelector(state => state.location.list);
     const loading = useSelector(state => state.location.loading);
-    console.log(loading)
-    const [inputValue, setInputValue] = React.useState({});
 
-    const [dimentions, setDimentions] = useState({width:0, height: 0});
+    const [inputValue, setInputValue] = useState('');
+    const [location, setLocation] = useState({});
+    const [locationSelected, setLocationSelected] = useState(false);
+    const [caption, setCaption] = useState('');
+    const [dimentions, setDimentions] = useState({ width:0, height: 0 });
+    const [openHashtagModal, setHashtagModal] = useState(false);
+
+    const debouncedSearch = useDebounce(inputValue, 800);
     let image = '';
 
-    const { values, handleChange, handleSubmit } = useForm({caption: "", tagUsers: [], }, fillUp);
-
     useEffect(() => {
-        let active = true;
-
+        if (debouncedSearch && debouncedSearch.length > 0 && !locationSelected && inputValue) {
+            dispatch(getLocation(debouncedSearch));
+        }
+        if (debouncedSearch.length === 0) {
+            dispatch(clearLocation());
+        }
         image = document.createElement('img');
         image.setAttribute('id','filterImage');
         image.src = reduxData[0];
@@ -80,52 +97,77 @@ const FinalStep = () => {
             width:image.width,
             height: image.height
         });
-
-    },[]);
-
-    function fillUp() {
-        console.log(values);
-    }
+    },[debouncedSearch, locationSelected]);
 
     const handleSearchLocation = (event) => {
-        console.log('handle search')
         setInputValue( event.target.value );
-        dispatch(getLocation(event.target.value));
+    };
+
+    const handleChangeCaption = (event) => {
+        let caption = event.target.value;
+        const lastElement = caption[caption.length-1];
+        if(lastElement === '#') {
+            setHashtagModal(true);
+        }
+        setCaption(caption)
+    };
+
+    const handleUpdateCaption = (hashtag) => {
+        let newCaption = caption.split('');
+        newCaption.pop();
+        setCaption(newCaption.join('')+hashtag);
+        setHashtagModal(false);
+    };
+
+    const handleSetLocation = (location) => {
+        if(!location) {
+            setInputValue('');
+            setLocation({});
+            setLocationSelected(false)
+        } else {
+            setInputValue(location.name);
+            setLocation(location);
+            setLocationSelected(true)
+        }
+        dispatch(clearLocation());
     }
 
     return (
         <div className={classes.formWrapper}>
-
             <TextField
                 id="outlined-multiline-static"
                 label="Caption"
                 multiline
                 rows="4"
                 name="caption"
-                value={values.caption}
-                onChange={handleChange}
+                value={caption}
+                onChange={handleChangeCaption}
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
             />
-            <DownshiftMultiple classes={classes} handleChange={handleChange} value={values.tagUsers}/>
+            <HashtagModal open={openHashtagModal} chooseHashtag={(hashtag) => handleUpdateCaption(hashtag)}/>
 
-            <TextField
-                value={inputValue.name}
-                onChange={handleSearchLocation}
-                fullWidth
-                label="Add Location"
-                className={classes.textField}
-            />
+            <div style={{display:'flex', justifyContent:'space-around'}}>
+                <TextField
+                    value={inputValue}
+                    onChange={handleSearchLocation}
+                    fullWidth
+                    label="Add Location"
+                    className={classes.textField}
+                />
+                {inputValue && <Button onClick={() => handleSetLocation('')}><ClearIcon/></Button>}
+            </div>
+
             {locationsData.length !== 0 &&
-                <Paper style={{height:'100px', width:'100%', overflowY:'scroll', marginTop:'10px'}}>
+                <Paper className={classes.locationsBlock}>
                     {locationsData.map(location => (
                         <Grid container alignItems="center">
                             <Grid item>
                                 <LocationOnIcon className={classes.icon} />
                             </Grid>
                             <Grid item xs>
-                                <Button onClick={() => setInputValue(location)}>
+                                <Button onClick={() => handleSetLocation(location)}>
                                     <Typography>{location.name}</Typography>
                                 </Button>
                             </Grid>
@@ -134,7 +176,9 @@ const FinalStep = () => {
                 </Paper>
             }
             {loading &&
-                <CircularProgress disableShrink />
+                <div className={classes.progressWrapper}>
+                    <LinearProgress variant="query" />
+                </div>
             }
         </div>
     )
