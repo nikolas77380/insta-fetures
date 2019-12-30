@@ -4,6 +4,7 @@ import {auth} from './../actions/types';
 const initialState = {
     user: null,
     token: localStorage.getItem('token'),
+    error: null,
     loading: false,
     isAuthenticated: null,
 };
@@ -37,6 +38,7 @@ export default function Auth(state = initialState, action) {
                 ...state,
                 token: null,
                 user: null,
+                error: action.payload,
                 isAuthenticated: false,
 
             }

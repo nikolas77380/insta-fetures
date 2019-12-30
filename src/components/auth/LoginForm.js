@@ -9,9 +9,13 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import useForm from "../useForm";
 import {Link} from "@material-ui/core";
+import {useSelector} from "react-redux";
+
+import { Notification } from "../../components/Notify";
 
 const useStyles = makeStyles({
     card: {
@@ -19,6 +23,9 @@ const useStyles = makeStyles({
         minWidth: 345,
         overflow:'visible',
         color:'grey'
+    },
+    wrapper: {
+        position: 'relative',
     },
     cardHeader: {
         textAlign:'center',
@@ -42,7 +49,14 @@ const useStyles = makeStyles({
     linkArea: {
         display:'flex',
         justifyContent:'center'
-    }
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: 0,
+        marginLeft: -12,
+    },
 });
 
 
@@ -50,7 +64,7 @@ export default function LoginForm({handleLogin}){
     const classes = useStyles();
 
     const { values, handleChange, handleSubmit } = useForm({email: "", password: ""}, fillUp);
-
+    const { loading, error } = useSelector(state => state.auth);
     function fillUp() {
         handleLogin(values);
     }
@@ -108,9 +122,15 @@ export default function LoginForm({handleLogin}){
 
                 </CardContent>
                 <CardActions className={classes.footer}>
-                    <Button type="submit" size="small" color="primary">
-                        Lets go
-                    </Button>
+                    <div className={classes.wrapper}>
+                        <Button type="submit" size="small" color="primary" disabled={loading}>
+                            {loading ? <CircularProgress
+                                size={24}
+                            /> : 'Lets go'}
+                        </Button>
+                        {error && <Notification type={"error"} text={error} />}
+                    </div>
+
                 </CardActions>
             </form>
         </Card>

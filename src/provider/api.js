@@ -26,9 +26,6 @@ class Provider {
     async login({email, password}) {
         const body = JSON.stringify({email, password});
             const response = await axios.post(`${Config.ProviderUrl}/api/auth`, body, this.config);
-            // return {
-            //     token: response.data.token
-            // };
             return response;
     }
 
@@ -55,6 +52,30 @@ class Provider {
             console.error(error);
             return {error}
         }
+    }
+
+    async getPosts() {
+        const response = await axios.get(`${Config.ProviderUrl}/api/posts`,this.config);
+        return response.data;
+    }
+
+    async createPost(formData) {
+        const body = JSON.stringify(formData);
+        const response = await axios.post(`${Config.ProviderUrl}/api/posts/`, body, this.config);
+        return response;
+
+    }
+
+    async schedulePost(post) {
+        const body = JSON.stringify(post);
+        console.log(body)
+        const response = await axios.post(`${Config.ProviderUrl}/api/posts/schedule`, body, this.config);
+        return response;
+    }
+
+    async deletePost(postId) {
+        const body = JSON.stringify(postId);
+        const response = await axios.get(`${Config.ProviderUrl}/api/posts/delete/${postId}`, this.config);
     }
 }
 

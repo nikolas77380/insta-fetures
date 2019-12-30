@@ -19,9 +19,9 @@ class ImageCropper extends Component {
     onSelectFile = e => {
         if (e.target.files && e.target.files.length > 0) {
             const reader = new FileReader();
-            reader.addEventListener('load', () =>
-                this.setState({ src: reader.result, showCrop: true })
-            );
+            reader.addEventListener('load', () => {
+                    this.setState({ src: reader.result, showCrop: true })
+            });
             this.props.resetCrop();
             reader.readAsDataURL(e.target.files[0]);
         }
@@ -84,7 +84,7 @@ class ImageCropper extends Component {
                 window.URL.revokeObjectURL(this.fileUrl);
                 this.fileUrl = window.URL.createObjectURL(blob);
                 resolve(this.fileUrl);
-            }, 'image/jpeg');
+            }, 'image/jpeg', 1);
         });
     }
     handleChangeAspect = (x, y) => {

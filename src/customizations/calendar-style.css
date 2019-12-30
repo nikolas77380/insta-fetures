@@ -199,8 +199,9 @@ button.rbc-input::-moz-focus-inner {
     margin-left: 10px;
 }
 .rbc-event {
+    width:50%;
     padding: 2px 5px;
-    background-color: #3174ad;
+    background-color: transparent;
     border-radius: 5px;
     color: #fff;
     cursor: pointer;
@@ -210,13 +211,13 @@ button.rbc-input::-moz-focus-inner {
     pointer-events: none;
 }
 .rbc-event.rbc-selected {
-    background-color: #265985;
+    /*background-color: #265985;*/
 }
 .rbc-event:focus {
     outline: 5px auto #3b99fc;
 }
 .rbc-event-label {
-    font-size: 80%;
+    display: none;
 }
 .rbc-event-overlaps {
     box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5);
@@ -474,7 +475,7 @@ button.rbc-input::-moz-focus-inner {
     right: 0;
 }
 .rbc-day-slot .rbc-event {
-    border: 1px solid #265985;
+    /*border: 1px solid #e91e63;*/
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;

@@ -12,6 +12,8 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepConnector from '@material-ui/core/StepConnector';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 import PhotoIcon from '@material-ui/icons/PhotoCamera';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -22,6 +24,9 @@ import FilterStep from "./steps/FiltersStep";
 
 import useForm from "../useForm";
 import FinalStep from "./steps/FinalStep";
+
+import {createPost} from './../../actions/post';
+
 
 
 const ColorlibConnector = withStyles({
@@ -133,6 +138,7 @@ function getStepContent(step) {
 export default function FormDialog({handleData}) {
     const classes = useStyles();
     const steps = getSteps();
+    const dispatch = useDispatch();
     const files = useSelector(state => state.post.files) || [];
     const [activeStep, setActiveStep] = React.useState(0);
     const { values, handleChange, handleSubmit } = useForm({title: "", shortDescription: "", description: ""}, fillUp);
@@ -152,7 +158,12 @@ export default function FormDialog({handleData}) {
     };
 
     const handleNext = () => {
-        setActiveStep(prevActiveStep => prevActiveStep + 1);
+        if(activeStep === steps.length - 1) {
+            dispatch(createPost());
+            //save post, close modal, clear redux post data
+        } else {
+            setActiveStep(prevActiveStep => prevActiveStep + 1);
+        }
     };
 
     const handleBack = () => {
@@ -165,9 +176,9 @@ export default function FormDialog({handleData}) {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                Create New Post
-            </Button>
+            <Fab style={{margin:'10px'}} size='medium' color="primary" aria-label="add" onClick={handleClickOpen}>
+                <AddIcon />
+            </Fab>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <form onSubmit={handleSubmit}>
                     <DialogTitle>

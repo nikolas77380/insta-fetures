@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import App from './App';
+import Routes from './routes';
 import * as serviceWorker from './serviceWorker';
 import store from './store';
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
@@ -32,7 +32,7 @@ ReactDOM.render(
         <MuiThemeProvider theme={theme}>
                 <ThemeProvider theme={theme}>
                     <CssBaseline/>
-                    <App/>
+                    <Routes/>
                 </ThemeProvider>
         </MuiThemeProvider>
     </Provider>,

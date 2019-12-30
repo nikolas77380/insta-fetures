@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {withStyles} from "@material-ui/core";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
@@ -35,40 +35,64 @@ const PrettoSlider = withStyles({
 
 
 const EditTab = ({settings, handleChange}) => {
+    const [localSettings, updateLocalSettings] = useState({});
+
+    const handleUpdateLocal = (type, value) => {
+        updateLocalSettings({
+            ...localSettings,
+            [type]: value
+        })
+    }
+
     return (
         <>
+            <Typography gutterBottom>Fade</Typography>
+            <PrettoSlider
+                disabled={settings.filter !== ''}
+                onChange={(event, value) => handleUpdateLocal('fade', value)}
+                onChangeCommitted={(event, value) => handleChange('fade', value) }
+                step={0.05}
+                max={1}
+                min={0}
+                valueLabelDisplay="auto"
+                aria-label="Fade"
+                value={localSettings['fade'] || settings['fade']}
+            />
             <Typography gutterBottom>Contrast</Typography>
             <PrettoSlider
                 disabled={settings.filter !== ''}
-                onChange={(event, value) => handleChange('contrast', value) }
+                onChange={(event, value) => handleUpdateLocal('contrast', value)}
+                onChangeCommitted={(event, value) => handleChange('contrast', value) }
                 step={0.05}
-                max={2}
-                min={0}
+                max={1}
+                min={-1}
                 valueLabelDisplay="auto"
                 aria-label="Contrast"
-                value={settings['contrast']}
-            />
-            <Typography gutterBottom>Saturation</Typography>
-            <PrettoSlider
-                disabled={settings.filter !== ''}
-                onChange={(event, value) => handleChange('saturation', value) }
-                step={0.05}
-                max={2}
-                min={0}
-                valueLabelDisplay="auto"
-                aria-label="Contrast"
-                value={settings['saturation']}
+                value={localSettings['contrast'] || settings['contrast']}
             />
             <Typography gutterBottom>Brightness</Typography>
             <PrettoSlider
                 disabled={settings.filter !== ''}
-                onChange={(event, value) => handleChange('brightness', value) }
+                onChange={(event, value) => handleUpdateLocal('brightness', value)}
+                onChangeCommitted={(event, value) => handleChange('brightness', value) }
                 step={0.05}
-                max={2}
+                max={1}
+                min={-1}
+                valueLabelDisplay="auto"
+                aria-label="Brightness"
+                value={localSettings['brightness']|| settings['brightness']}
+            />
+            <Typography gutterBottom>Opacity</Typography>
+            <PrettoSlider
+                disabled={settings.filter !== ''}
+                onChange={(event, value) => handleUpdateLocal('opacity', value)}
+                onChangeCommitted={(event, value) => handleChange('opacity', value) }
+                step={0.05}
+                max={1}
                 min={0}
                 valueLabelDisplay="auto"
-                aria-label="Contrast"
-                value={settings['brightness']}
+                aria-label="Opacity"
+                value={localSettings['opacity']|| settings['opacity']}
             />
         </>
     )

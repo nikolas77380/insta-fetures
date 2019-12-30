@@ -58,7 +58,7 @@ const HashtagModal = ({open, handleClose, chooseHashtag}) => {
                         {hashtagsData.map(item => (
                             <Chip
                                 key={item.hashtag.id}
-                                label={'#'+item.hashtag.name}
+                                label={'#'+item.hashtag.name + `(${item.hashtag.search_result_subtitle})`}
                                 onClick={() => handleClickChip('#'+item.hashtag.name)}
                                 variant="outlined"
                             />

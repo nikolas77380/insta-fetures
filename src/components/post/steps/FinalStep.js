@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import {Paper} from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {getLocation, clearLocation} from "../../../actions/post";
+import {getLocation, clearLocation, setCaption, setLocation} from "../../../actions/post";
 import useDebounce from "../../useDebounce";
 import HashtagModal from "../../common/HashtagModal";
 
@@ -74,9 +74,9 @@ const FinalStep = () => {
     const loading = useSelector(state => state.location.loading);
 
     const [inputValue, setInputValue] = useState('');
-    const [location, setLocation] = useState({});
+    const [location, setInputLocation] = useState({});
     const [locationSelected, setLocationSelected] = useState(false);
-    const [caption, setCaption] = useState('');
+    const [caption, setInputCaption] = useState('');
     const [dimentions, setDimentions] = useState({ width:0, height: 0 });
     const [openHashtagModal, setHashtagModal] = useState(false);
 
@@ -103,34 +103,41 @@ const FinalStep = () => {
         setInputValue( event.target.value );
     };
 
+    const handleSetLocation = (location) => {
+        if(!location) {
+            setInputValue('');
+            setInputLocation({});
+            dispatch(setLocation({}))
+            setLocationSelected(false)
+        } else {
+            setInputValue(location.name);
+            setInputLocation(location);
+            dispatch(setLocation(location))
+            setLocationSelected(true)
+        }
+        dispatch(clearLocation());
+    }
+
     const handleChangeCaption = (event) => {
         let caption = event.target.value;
         const lastElement = caption[caption.length-1];
         if(lastElement === '#') {
             setHashtagModal(true);
         }
-        setCaption(caption)
+        setInputCaption(caption);
+        dispatch(setCaption(caption));
+
     };
 
     const handleUpdateCaption = (hashtag) => {
         let newCaption = caption.split('');
         newCaption.pop();
-        setCaption(newCaption.join('')+hashtag);
+        setInputCaption(newCaption.join('')+hashtag);
+        dispatch(setCaption(newCaption.join('')+hashtag));
         setHashtagModal(false);
     };
 
-    const handleSetLocation = (location) => {
-        if(!location) {
-            setInputValue('');
-            setLocation({});
-            setLocationSelected(false)
-        } else {
-            setInputValue(location.name);
-            setLocation(location);
-            setLocationSelected(true)
-        }
-        dispatch(clearLocation());
-    }
+
 
     return (
         <div className={classes.formWrapper}>

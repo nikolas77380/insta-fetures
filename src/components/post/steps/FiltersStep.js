@@ -3,21 +3,16 @@ import {useDispatch, useSelector} from "react-redux";
 import EditTab from "../tabs/EditTab";
 import FiltersTab from "../tabs/FiltersTab";
 
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import ProcessImage from 'react-imgpro';
 
-import { Node } from "gl-react";
-import { Surface } from "gl-react-dom";
-import {setFiles} from './../../../actions/post';
-
-// Filter for images
-import Shaders from './../../../filters/shaders';
-import Uniforms from "../../../filters/uniforms";
+import {setDownloadFile} from './../../../actions/post';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -79,25 +74,6 @@ function TabPanel(props) {
     );
 }
 
-const Saturate = ({ filter, contrast, saturation, brightness, children }) => {
-    let uniforms, currentShaders;
-    if (filter) {
-        currentShaders = Shaders[filter];
-        uniforms = Uniforms(filter, children);
-    } else {
-        currentShaders = Shaders.Saturate;
-        uniforms = {
-            contrast, saturation, brightness, t: children
-        }
-    }
-
-    return (
-        <Node
-            shader={currentShaders}
-            uniforms={uniforms}
-        />)
-}
-
 function a11yProps(index) {
     return {
         id: `simple-tab-${index}`,
@@ -107,17 +83,20 @@ function a11yProps(index) {
 
 function FilterStep(props) {
     const defaultSettings = {
-        contrast: 1,
-        saturation: 1,
-        brightness: 1,
+        contrast: 0,
+        fade: 0.5,
+        brightness: 0,
+        opacity: 0.5,
+        // blur: 50,
         filter: ''
     };
     const classes = useStyles();
     const reduxData = useSelector(state => state.post.files);
-
+    const dispatch = useDispatch();
     const [settings, setSettings] = useState(defaultSettings);
     const [tab, setTab] = React.useState(0);
     const [dimentions, setDimentions] = useState({width:0, height: 0});
+    const [updatedImage, updateImage] = useState({})
     let image = '';
 
     useEffect(() => {
@@ -143,17 +122,25 @@ function FilterStep(props) {
         setSettings(defaultSettings);
     }
 
+    const applyChangesToImage = (src, err) => {
+        dispatch(setDownloadFile(src))
+        updateImage({src, err})
+    }
+
     return (
         <section className="container">
             <div style={thumbsContainer}>
-                <div style={thumb}>
-                    <div style={thumbInner}>
-                        <Surface width={dimentions.width} height={dimentions.height}>
-                            <Saturate {...settings}>
-                                { reduxData[0] }
-                            </Saturate>
-                        </Surface>
-                    </div>
+                <div className={classes.thumb}>
+                    <ProcessImage
+                        brightness={settings.brightness}
+                        contrast={settings.contrast}
+                        fade={settings.fade}
+                        opacity={settings.opacity}
+                        quality={95}
+                        image={ reduxData[0] }
+                        resize={{ width: dimentions.width, height: dimentions.height }}
+                        processedImage={(src, err) => applyChangesToImage( src, err )}
+                    />
                 </div>
                 <div style={{width:'80%'}}>
                     <div  style={{display:'flex', justifyContent:'flex-end', marginBottom: '10px'}}>
@@ -169,14 +156,14 @@ function FilterStep(props) {
                             textColor="primary"
                             centered
                         >
-                            <Tab label="Filters" {...a11yProps(0)}/>
                             <Tab label="Edit" {...a11yProps(1)}/>
+                            <Tab label="Filters" {...a11yProps(0)}/>
                         </Tabs>
                     </Paper>
-                    <TabPanel style={{maxHeight:'130px', overflowY: 'scroll'}} value={tab} index={0}>
+                    <TabPanel style={{maxHeight:'150px', overflowY: 'scroll'}} value={tab} index={1}>
                         <FiltersTab handleChange={(type, value) => handleChange(type, value)}/>
                     </TabPanel>
-                    <TabPanel style={{maxHeight:'130px', overflowY: 'scroll'}} value={tab} index={1}>
+                    <TabPanel style={{maxHeight:'150px', overflowY: 'scroll'}} value={tab} index={0}>
                         <EditTab settings={settings} handleChange={(type, value) => handleChange(type, value)}/>
                     </TabPanel>
                 </div>

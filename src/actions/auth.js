@@ -1,7 +1,7 @@
 import {auth} from './types'
 import provider from './../provider/api';
 import setAuthToken from "../utils/setAuthToken";
-const { loading, loginSuccess, loginFailed, userLoaded } = auth;
+const { loginSuccess, loginFailed } = auth;
 
 export const loadUser = () => {
     return async dispatch => {
@@ -22,6 +22,7 @@ export const loadUser = () => {
                 dispatch({type: auth.loading, payload: false});
             }
         } catch (err) {
+
             dispatch({type: auth.loginFailed});
             dispatch({type: auth.loading, payload: false});
         }
@@ -37,7 +38,7 @@ export const login = ({email, password}) => {
             dispatch(loadUser());
             dispatch({type: auth.loading, payload: false});
         } catch(err) {
-            dispatch({type: loginFailed, payload: err});
+            dispatch({type: loginFailed, payload: 'Authentication failed!'});
             dispatch({type: auth.loading, payload: false});
         }
     }

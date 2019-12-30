@@ -3,11 +3,13 @@ import {combineReducers} from 'redux';
 import auth from './auth';
 import post from './post';
 import location from './location';
+import error from './error';
 
 const appReducer = combineReducers({
     auth: auth,
     post: post,
-    location: location
+    location: location,
+    error: error
 });
 
 const rootReducer = (state,action) => {
