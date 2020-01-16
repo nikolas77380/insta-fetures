@@ -32,6 +32,9 @@ export default function ButtonAppBar({children}) {
             <Typography variant="h6" className={classes.title}>
               PostPone
             </Typography>
+            <Typography variant="h6" className={classes.title}>
+              @nikolayKipniak
+            </Typography>
             <Button color="inherit">logout</Button>
           </Toolbar>
         </AppBar>
