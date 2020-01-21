@@ -1,6 +1,6 @@
 import axios from 'axios';
 const Config = {
-    ProviderUrl: 'http://localhost:5000'
+    ProviderUrl: 'http://postponespace-env.idbqhkmj4q.us-east-2.elasticbeanstalk.com'
 }
 
 
