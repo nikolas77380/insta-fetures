@@ -11,8 +11,8 @@ import {loadUser} from "./actions/auth";
 import RequireAuth from './utils/requiresAuth';
 import LandingPage from "./pages/LandingPage";
 
-if(localStorage.token) {
-    setAuthToken(localStorage.token);
+if(localStorage.getItem('token')) {
+    setAuthToken(localStorage.getItem('token'));
 }
 
 const App = () => {

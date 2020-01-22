@@ -5,24 +5,27 @@ const { loginSuccess, loginFailed } = auth;
 
 export const loadUser = () => {
     return async dispatch => {
+        dispatch({type: auth.loading, payload: true});
         try{
-            dispatch({type: auth.loading, payload: true});
-            if(localStorage.token) {
-                setAuthToken(localStorage.token);
-            }
-            const res = await provider.authenticate();
-            if(res.error) {
-                dispatch({type: auth.loginFailed});
-                dispatch({type: auth.loading, payload: false});
+            if(localStorage.getItem('token')) {
+                setAuthToken(localStorage.getItem('token'));
+
+                const res = await provider.authenticate();
+                if(res.error) {
+                    dispatch({type: auth.loginFailed});
+                    dispatch({type: auth.loading, payload: false});
+                } else {
+                    dispatch({
+                        type: auth.userLoaded,
+                        payload: res
+                    });
+                    dispatch({type: auth.loading, payload: false});
+                }
             } else {
-                dispatch({
-                    type: auth.userLoaded,
-                    payload: res
-                });
+                dispatch({type: auth.loginFailed});
                 dispatch({type: auth.loading, payload: false});
             }
         } catch (err) {
-
             dispatch({type: auth.loginFailed});
             dispatch({type: auth.loading, payload: false});
         }

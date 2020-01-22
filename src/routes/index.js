@@ -14,8 +14,8 @@ import {Typography} from "@material-ui/core";
 
 // import Layout from '../layout'
 
-if(localStorage.token) {
-  setAuthToken(localStorage.token);
+if(localStorage.getItem('token')) {
+    setAuthToken(localStorage.getItem('token'));
 }
 const history = createBrowserHistory();
 
@@ -25,9 +25,9 @@ class Routes extends React.Component {
   }
 
   render() {
-    const {auth, loading} = this.props;
-    console.log(auth);
-    if (loading || auth.isAuthenticated == null) {
+    const {auth} = this.props;
+    const {loading} = auth;
+    if (loading) {
       return <Typography>Loading...</Typography>;
     }
     return <>

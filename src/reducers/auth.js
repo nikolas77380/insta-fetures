@@ -25,7 +25,7 @@ export default function Auth(state = initialState, action) {
                 user: payload,
             }
         case auth.loginSuccess:
-            localStorage.setItem('token', payload)
+            localStorage.setItem('token', payload);
             return {
                 ...state,
                 token: payload,
