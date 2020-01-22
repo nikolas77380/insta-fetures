@@ -1,6 +1,6 @@
 import axios from 'axios';
 const Config = {
-    ProviderUrl: 'http://postponespace-env.idbqhkmj4q.us-east-2.elasticbeanstalk.com'
+    ProviderUrl: 'https://postpone.us-east-2.elasticbeanstalk.com'
 }
 
 
