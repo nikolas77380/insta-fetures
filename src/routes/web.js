@@ -18,6 +18,15 @@ const routes = [
             loading: LoadingComponent,
         }),
     },
+    {
+        path: '/',
+        exact: true,
+        auth: true,
+        component: Loadable({
+            loader: () => import('../pages/Scheduler'),
+            loading: LoadingComponent,
+        }),
+    },
 ]
 
 export default routes
