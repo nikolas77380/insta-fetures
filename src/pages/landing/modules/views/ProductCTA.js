@@ -57,6 +57,9 @@ const styles = theme => ({
     width: '468px',
     maxWidth: 600,
   },
+  contactUs: {
+    textAlign: 'center'
+  }
 });
 
 function ProductCTA(props) {
@@ -78,7 +81,7 @@ function ProductCTA(props) {
         <Grid item xs={12} md={6} className={classes.cardWrapper}>
           <div className={classes.card}>
             <form onSubmit={handleSubmit} className={classes.cardContent}>
-              <Typography variant="h2" component="h2" gutterBottom>
+              <Typography variant="h2" component="h2" gutterBottom  className={classes.contactUs}>
                 Contact With Us
               </Typography>
               <TextField noBorder className={classes.textField} placeholder="Your email" />
