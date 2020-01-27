@@ -21,9 +21,8 @@ const routes = [
     {
         path: '/',
         exact: true,
-        auth: true,
         component: Loadable({
-            loader: () => import('../pages/Scheduler'),
+            loader: () => import('../pages/landing/Home'),
             loading: LoadingComponent,
         }),
     },
